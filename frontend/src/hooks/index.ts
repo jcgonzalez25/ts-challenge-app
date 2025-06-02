@@ -21,10 +21,13 @@ export type {
 // Student workflow hooks
 export { useStudentEditor } from './useStudentEditor';
 export { useStudentFilters } from './useStudentFilters';
+export { useStudentStatistics } from './useStudentStatistics';
+export type { StudentStatistics } from './useStudentStatistics';
 
 // Generic utility hooks
 export { useEditingState } from './useEditingState';
 export { useConfirmation } from './useConfirmation';
+export { useViewToggle } from './useViewToggle';
 
 export { useAsyncOperation } from './useAsyncOperation';
 export type {
