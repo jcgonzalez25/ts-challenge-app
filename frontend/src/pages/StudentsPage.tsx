@@ -1,36 +1,66 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { PageLayout, StudentListSection } from '../components';
+import StudentModal from '../components/students/StudentModal/StudentModal';
 import { useStudents } from '../hooks/useStudents';
-import { ErrorMessage, LoadingSpinner } from '../components/common';
-import StudentForm from '../components/students/StudentForm/StudentForm';
-import StudentList from '../components/students/StudentList/StudentList';
+import { useStudentEditor } from '../hooks/useStudentEditor';
+import { useConfirmation } from '../hooks/useConfirmation';
 
 const StudentsPage: React.FC = () => {
-  const { students, loading, error, createStudent } = useStudents();
+  const { students, loading, error, createStudent, updateStudent, deleteStudent } = useStudents();
+  const { confirm } = useConfirmation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  const {
+    editingStudent,
+    startEditing,
+    stopEditing,
+    handleSubmit,
+  } = useStudentEditor({
+    onCreate: createStudent,
+    onUpdate: updateStudent,
+  });
+
+  const handleDelete = (id: number) => {
+    confirm(
+      () => deleteStudent(id),
+      { message: 'Are you sure you want to delete this student?' }
+    );
+  };
+
+  const handleAddStudent = () => {
+    stopEditing(); // Clear any existing editing state
+    setIsModalOpen(true);
+  };
+
+  const handleEditStudent = (student: any) => {
+    startEditing(student);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    stopEditing();
+  };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Student Management System</h1>
+    <PageLayout title="Student Management System">
+      <StudentListSection
+        students={students}
+        loading={loading}
+        error={error}
+        onEdit={handleEditStudent}
+        onDelete={handleDelete}
+        onAddStudent={handleAddStudent}
+      />
       
-      <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-4">Add New Student</h2>
-        <StudentForm 
-          onSubmit={createStudent} 
-          isLoading={loading}
-        />
-      </div>
-
-      <div>
-        <h2 className="text-xl font-semibold mb-4">Student List</h2>
-        {error && (
-          <ErrorMessage message={error} />
-        )}
-        {loading && students.length === 0 ? (
-          <LoadingSpinner />
-        ) : (
-          <StudentList students={students} />
-        )}
-      </div>
-    </div>
+      <StudentModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        editingStudent={editingStudent}
+        isLoading={loading}
+        onSubmit={handleSubmit}
+      />
+    </PageLayout>
   );
 };
 
