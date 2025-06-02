@@ -3,9 +3,8 @@ export interface ValidationError {
   message: string;
 }
 
-export interface ApiResponse<T = any> {
-  success: boolean;
-  data?: T;
-  error?: string;
+export interface ApiError extends Error {
+  name: 'ApiError';
   errors?: ValidationError[];
-}
+  statusCode?: number;
+} 
