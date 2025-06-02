@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Student } from '../types/student.types';
+import { Student } from '../../types/student.types';
 
 export interface StudentStatistics {
   totalStudents: number;
@@ -91,7 +91,7 @@ export const useStudentStatistics = (students: Student[]): StudentStatistics => 
 
     // Recent additions (last 30 days)
     const recentAdditions = students.filter(student => 
-      new Date(student.created_at) >= thirtyDaysAgo
+      new Date(student.createdAt) >= thirtyDaysAgo
     ).length;
 
     // GPA distribution

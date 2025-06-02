@@ -9,8 +9,8 @@ export interface Student {
   state?: string;
   latitude?: number;
   longitude?: number;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface CreateStudentDto {
@@ -29,6 +29,6 @@ export interface CreateStudentDto {
 export interface StudentBasic {
   id: number;
   name: string;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
 }

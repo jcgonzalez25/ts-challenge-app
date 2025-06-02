@@ -3,7 +3,7 @@ import { Student } from '../../types/student.types';
 
 export const useStudentFilters = (students: Student[]) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState<'name' | 'email' | 'graduationYear' | 'gpa' | 'created_at'>('name');
+  const [sortBy, setSortBy] = useState<'name' | 'email' | 'graduationYear' | 'gpa' | 'createdAt'>('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
   const filteredAndSortedStudents = useMemo(() => {
@@ -26,7 +26,7 @@ export const useStudentFilters = (students: Student[]) => {
       let bValue: any = b[sortBy];
 
       // Handle different data types
-      if (sortBy === 'created_at') {
+      if (sortBy === 'createdAt') {
         aValue = new Date(aValue).getTime();
         bValue = new Date(bValue).getTime();
       } else if (typeof aValue === 'string') {
