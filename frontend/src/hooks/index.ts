@@ -28,6 +28,7 @@ export type { StudentStatistics } from './useStudentStatistics';
 export { useEditingState } from './useEditingState';
 export { useConfirmation } from './useConfirmation';
 export { useViewToggle } from './useViewToggle';
+export { useStudentPageState } from './useStudentPageState';
 
 export { useAsyncOperation } from './useAsyncOperation';
 export type {
