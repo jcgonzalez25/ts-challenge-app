@@ -1,5 +1,6 @@
 import React from 'react';
 import { Student } from '../../../types/student.types';
+import { Card, Button } from '../../common';
 
 interface StudentListItemProps {
   student: Student;
@@ -9,7 +10,7 @@ interface StudentListItemProps {
 
 const StudentListItem: React.FC<StudentListItemProps> = ({ student, onEdit, onDelete }) => {
   return (
-    <div className="border p-4 rounded-md shadow-sm hover:shadow-md transition-shadow">
+    <Card hover>
       <div className="flex justify-between items-start">
         <div>
           <p className="font-medium text-lg">{student.name}</p>
@@ -19,24 +20,26 @@ const StudentListItem: React.FC<StudentListItemProps> = ({ student, onEdit, onDe
         </div>
         <div className="flex gap-2">
           {onEdit && (
-            <button
+            <Button
               onClick={() => onEdit(student)}
-              className="text-blue-600 hover:text-blue-800 text-sm"
+              variant="secondary"
+              size="sm"
             >
               Edit
-            </button>
+            </Button>
           )}
           {onDelete && (
-            <button
+            <Button
               onClick={() => onDelete(student.id)}
-              className="text-red-600 hover:text-red-800 text-sm"
+              variant="danger"
+              size="sm"
             >
               Delete
-            </button>
+            </Button>
           )}
         </div>
       </div>
-    </div>
+    </Card>
   );
 };
 

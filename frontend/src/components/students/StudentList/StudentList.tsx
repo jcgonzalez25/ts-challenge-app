@@ -1,5 +1,6 @@
 import React from 'react';
 import { Student } from '../../../types/student.types';
+import { EmptyState } from '../../common';
 import StudentListItem from './StudentListItem';
 
 interface StudentListProps {
@@ -11,9 +12,9 @@ interface StudentListProps {
 const StudentList: React.FC<StudentListProps> = ({ students, onEdit, onDelete }) => {
   if (students.length === 0) {
     return (
-      <div className="text-center py-8 text-gray-500">
-        No students found. Add a student to get started.
-      </div>
+      <EmptyState
+        message="No students found. Add a student to get started."
+      />
     );
   }
 
