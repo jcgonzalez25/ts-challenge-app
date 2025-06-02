@@ -1,5 +1,8 @@
-export { default as FormField } from './FormField';
+// Modern component exports (directory-based structure)
 export { default as Button } from './Button';
+
+// Original components (flat file structure)
+export { default as FormField } from './FormField';
 export { default as Card } from './Card';
 export { default as ErrorMessage } from './ErrorMessage';
 export { default as LoadingSpinner } from './LoadingSpinner';
