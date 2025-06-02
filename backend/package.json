@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "node dist/index.js",
-    "dev": "tsx watch src/index.ts",
+    "dev": "tsx watch src/server.ts",
     "build": "tsc",
     "test": "jest",
     "migrate:create": "knex migrate:make",
