@@ -15,7 +15,7 @@ const StudentListItem: React.FC<StudentListItemProps> = ({ student, onEdit, onDe
         <div>
           <p className="font-medium text-lg">{student.name}</p>
           <p className="text-sm text-gray-500">
-            Created: {new Date(student.created_at).toLocaleDateString()}
+            Created: {new Date(student.createdAt).toLocaleDateString()}
           </p>
         </div>
         <div className="flex gap-2">

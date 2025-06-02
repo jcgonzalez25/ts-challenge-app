@@ -93,7 +93,7 @@ const StudentListSection: React.FC<StudentListSectionProps> = ({
               { key: 'email', label: 'Email' },
               { key: 'graduationYear', label: 'Graduation' },
               { key: 'gpa', label: 'GPA' },
-              { key: 'created_at', label: 'Date Added' },
+              { key: 'createdAt', label: 'Date Added' },
             ].map(({ key, label }) => (
               <button
                 key={key}

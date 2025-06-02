@@ -4,6 +4,24 @@ import { Student, CreateStudentDto, UpdateStudentDto, StudentFilters } from '../
 export class StudentModel {
   private static tableName = 'students';
 
+  // Helper method to map database fields to API fields
+  private static mapToApiFormat(dbStudent: any): Student {
+    return {
+      id: dbStudent.id,
+      name: dbStudent.name,
+      email: dbStudent.email,
+      graduationYear: dbStudent.graduation_year,
+      phoneNumber: dbStudent.phone_number,
+      gpa: dbStudent.gpa,
+      city: dbStudent.city,
+      state: dbStudent.state,
+      latitude: dbStudent.latitude,
+      longitude: dbStudent.longitude,
+      createdAt: dbStudent.created_at,
+      updatedAt: dbStudent.updated_at,
+    };
+  }
+
   static async findAll(filters?: StudentFilters): Promise<Student[]> {
     const db = getDb()
     let query = db(this.tableName).select('*');
@@ -39,7 +57,8 @@ export class StudentModel {
       }
     }
 
-    return query.orderBy('name', 'asc');
+    const results = await query.orderBy('name', 'asc');
+    return results.map(this.mapToApiFormat);
   }
 
   static async findById(id: number): Promise<Student | null> {
@@ -48,7 +67,7 @@ export class StudentModel {
       .where('id', id)
       .first();
     
-    return student || null;
+    return student ? this.mapToApiFormat(student) : null;
   }
 
   static async findByEmail(email: string): Promise<Student | null> {
@@ -57,7 +76,7 @@ export class StudentModel {
       .where('email', email)
       .first();
     
-    return student || null;
+    return student ? this.mapToApiFormat(student) : null;
   }
 
   static async create(data: CreateStudentDto): Promise<Student> {
