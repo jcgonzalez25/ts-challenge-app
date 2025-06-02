@@ -1,55 +1,49 @@
-import React, { useState } from 'react';
-import { PageLayout, StudentListSection } from '../components';
-import StudentModal from '../components/students/StudentModal/StudentModal';
-import { useStudents } from '../hooks/useStudents';
-import { useStudentEditor } from '../hooks/useStudentEditor';
-import { useConfirmation } from '../hooks/useConfirmation';
+import React from 'react';
+import { 
+  PageLayout, 
+  StudentPageHeader, 
+  StudentPageContent, 
+  StudentModal 
+} from '../components';
+import { useStudentPageState } from '../hooks';
 
 const StudentsPage: React.FC = () => {
-  const { students, loading, error, createStudent, updateStudent, deleteStudent } = useStudents();
-  const { confirm } = useConfirmation();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  
   const {
+    // Data
+    students,
+    loading,
+    error,
+    
+    // Modal & Editor state
+    isModalOpen,
     editingStudent,
-    startEditing,
-    stopEditing,
+    
+    // Statistics state
+    showStatistics,
+    toggleStatistics,
+    
+    // Actions
+    handleAddStudent,
+    handleEditStudent,
+    handleDeleteStudent,
+    handleCloseModal,
     handleSubmit,
-  } = useStudentEditor({
-    onCreate: createStudent,
-    onUpdate: updateStudent,
-  });
-
-  const handleDelete = (id: number) => {
-    confirm(
-      () => deleteStudent(id),
-      { message: 'Are you sure you want to delete this student?' }
-    );
-  };
-
-  const handleAddStudent = () => {
-    stopEditing(); // Clear any existing editing state
-    setIsModalOpen(true);
-  };
-
-  const handleEditStudent = (student: any) => {
-    startEditing(student);
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    stopEditing();
-  };
+  } = useStudentPageState();
 
   return (
     <PageLayout title="Student Management System">
-      <StudentListSection
+      <StudentPageHeader
+        showStatistics={showStatistics}
+        onToggleStatistics={toggleStatistics}
+      />
+      
+      <StudentPageContent
         students={students}
         loading={loading}
         error={error}
+        showStatistics={showStatistics}
         onEdit={handleEditStudent}
-        onDelete={handleDelete}
+        onDelete={handleDeleteStudent}
         onAddStudent={handleAddStudent}
       />
       
