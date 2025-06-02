@@ -1,5 +1,6 @@
 import React from 'react';
 import { useStudents } from '../hooks/useStudents';
+import { ErrorMessage, LoadingSpinner } from '../components/common';
 import StudentForm from '../components/students/StudentForm/StudentForm';
 import StudentList from '../components/students/StudentList/StudentList';
 
@@ -21,12 +22,10 @@ const StudentsPage: React.FC = () => {
       <div>
         <h2 className="text-xl font-semibold mb-4">Student List</h2>
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-            {error}
-          </div>
+          <ErrorMessage message={error} />
         )}
         {loading && students.length === 0 ? (
-          <div className="text-center py-8">Loading...</div>
+          <LoadingSpinner />
         ) : (
           <StudentList students={students} />
         )}

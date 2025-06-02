@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { CreateStudentDto } from '../../../types/student.types';
+import { FormField, Button } from '../../common';
 
 interface StudentFormProps {
   onSubmit: (data: CreateStudentDto) => Promise<void>;
@@ -49,119 +50,82 @@ const StudentForm: React.FC<StudentFormProps> = ({ onSubmit, initialData, isLoad
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-          Student Name *
-        </label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-          required
-        />
-      </div>
-      <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-          Email Address *
-        </label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-          required
-        />
-      </div>
+      <FormField
+        label="Student Name"
+        id="name"
+        name="name"
+        value={formData.name}
+        onChange={handleChange}
+        required
+      />
 
-      <div>
-        <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700">
-          Phone Number *
-        </label>
-        <input
-          type="tel"
-          id="phoneNumber"
-          name="phoneNumber"
-          value={formData.phoneNumber}
-          onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-          required
-          placeholder="(123) 456-7890"
-        />
-      </div>
+      <FormField
+        label="Email Address"
+        id="email"
+        name="email"
+        type="email"
+        value={formData.email}
+        onChange={handleChange}
+        required
+      />
 
-      <div>
-        <label htmlFor="graduationYear" className="block text-sm font-medium text-gray-700">
-          Graduation Year *
-        </label>
-        <input
-          type="number"
-          id="graduationYear"
-          name="graduationYear"
-          value={formData.graduationYear}
-          onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-          required
-        />
-      </div>
+      <FormField
+        label="Phone Number"
+        id="phoneNumber"
+        name="phoneNumber"
+        type="tel"
+        value={formData.phoneNumber}
+        onChange={handleChange}
+        required
+        placeholder="(123) 456-7890"
+      />
 
-      <div>
-        <label htmlFor="gpa" className="block text-sm font-medium text-gray-700">
-          GPA *
-        </label>
-        <input
-          type="number"
-          id="gpa"
-          name="gpa"
-          value={formData.gpa}
-          onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-          required
-          step="0.01"
-          min="0"
-          max="4.0"
-        />
-      </div>
+      <FormField
+        label="Graduation Year"
+        id="graduationYear"
+        name="graduationYear"
+        type="number"
+        value={formData.graduationYear}
+        onChange={handleChange}
+        required
+      />
 
-      <div>
-        <label htmlFor="city" className="block text-sm font-medium text-gray-700">
-          City
-        </label>
-        <input
-          type="text"
-          id="city"
-          name="city"
-          value={formData.city}
-          onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-        />
-      </div>
+      <FormField
+        label="GPA"
+        id="gpa"
+        name="gpa"
+        type="number"
+        value={formData.gpa}
+        onChange={handleChange}
+        required
+        step="0.01"
+        min="0"
+        max="4.0"
+      />
 
-      <div>
-        <label htmlFor="state" className="block text-sm font-medium text-gray-700">
-          State
-        </label>
-        <input
-          type="text"
-          id="state"
-          name="state"
-          value={formData.state}
-          onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-        />
-      </div>
+      <FormField
+        label="City"
+        id="city"
+        name="city"
+        value={formData.city || ''}
+        onChange={handleChange}
+      />
 
-      <button
+      <FormField
+        label="State"
+        id="state"
+        name="state"
+        value={formData.state || ''}
+        onChange={handleChange}
+      />
+
+      <Button
         type="submit"
-        disabled={isLoading}
-        className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 disabled:opacity-50"
+        isLoading={isLoading}
+        variant="primary"
       >
-        {isLoading ? 'Saving...' : 'Add Student'}
-      </button>
+        Add Student
+      </Button>
     </form>
   );
 };
