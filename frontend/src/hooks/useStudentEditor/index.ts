@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
-import { CreateStudentDto, Student } from '../types/student.types';
-import { useEditingState } from './useEditingState';
+import { CreateStudentDto, Student } from '../../types/student.types';
+import { useEditingState } from '../useEditingState';
 
 interface UseStudentEditorProps {
   onUpdate: (id: number, data: Partial<CreateStudentDto>) => Promise<void>;

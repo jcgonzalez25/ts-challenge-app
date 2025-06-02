@@ -25,6 +25,20 @@ hooks/
 │   ├── useStudentsState.ts   # State management hook
 │   ├── useStudentsApi.ts     # API operations hook
 │   └── README.md            # Students hooks documentation
+├── useStudentPageState/       # Student page state composition hook
+│   └── index.ts              # Complete page state management
+├── useStudentEditor/          # Student editing workflow hook
+│   └── index.ts              # Student form editing logic
+├── useStudentFilters/         # Student filtering and search hook
+│   └── index.ts              # Filter, search, and sort logic
+├── useStudentStatistics/      # Student analytics hook
+│   └── index.ts              # Statistics calculations and metrics
+├── useConfirmation/           # Confirmation dialog hook
+│   └── index.ts              # Modal confirmation patterns
+├── useEditingState/           # Generic editing state hook
+│   └── index.ts              # Generic editing state management
+├── useViewToggle/             # View toggle hook
+│   └── index.ts              # Show/hide toggle functionality
 ├── useAsyncOperation/         # Generic async operation hook
 │   ├── index.ts              # useAsyncOperation exports
 │   ├── types.ts              # Async operation types
@@ -44,12 +58,19 @@ Hooks that handle specific business logic and data management:
 
 - **`useForm`** - Form state, validation, and submission management
 - **`useStudents`** - Student data CRUD operations and state management
+- **`useStudentPageState`** - Complete student page state composition and orchestration
+- **`useStudentEditor`** - Student editing workflow with create/update operations
+- **`useStudentFilters`** - Student filtering, search, and sorting functionality
+- **`useStudentStatistics`** - Student analytics and metrics calculations
 
 ### 🔧 **Generic Utility Hooks**
 Reusable hooks that provide common patterns across the application:
 
 - **`useAsyncOperation`** - Standardized async operation handling with loading/error states
 - **`useApiCache`** - Generic API cache management and invalidation
+- **`useEditingState`** - Generic editing state management for any entity
+- **`useConfirmation`** - Reusable confirmation dialog patterns
+- **`useViewToggle`** - Simple show/hide toggle functionality
 
 ## Benefits of This Organization
 
@@ -78,10 +99,17 @@ Generic hooks like `useAsyncOperation` and `useApiCache` can be used across diff
 // Domain-specific hooks
 import { useForm } from '../hooks/useForm';
 import { useStudents } from '../hooks/useStudents';
+import { useStudentPageState } from '../hooks/useStudentPageState';
+import { useStudentEditor } from '../hooks/useStudentEditor';
+import { useStudentFilters } from '../hooks/useStudentFilters';
+import { useStudentStatistics } from '../hooks/useStudentStatistics';
 
 // Generic utility hooks
 import { useAsyncOperation } from '../hooks/useAsyncOperation';
 import { useApiCache } from '../hooks/useApiCache';
+import { useEditingState } from '../hooks/useEditingState';
+import { useConfirmation } from '../hooks/useConfirmation';
+import { useViewToggle } from '../hooks/useViewToggle';
 ```
 
 ### Namespace Import
@@ -89,8 +117,15 @@ import { useApiCache } from '../hooks/useApiCache';
 import { 
   useForm, 
   useStudents, 
+  useStudentPageState,
+  useStudentEditor,
+  useStudentFilters,
+  useStudentStatistics,
   useAsyncOperation, 
-  useApiCache 
+  useApiCache,
+  useEditingState,
+  useConfirmation,
+  useViewToggle
 } from '../hooks';
 ```
 
@@ -104,6 +139,7 @@ import { useStudentsApi, useStudentsState } from '../hooks/useStudents';
 ```typescript
 import type { UseFormConfig, FormState } from '../hooks/useForm';
 import type { AsyncOperationConfig } from '../hooks/useAsyncOperation';
+import type { StudentStatistics } from '../hooks/useStudentStatistics';
 ```
 
 ## Creating New Domain Hooks
