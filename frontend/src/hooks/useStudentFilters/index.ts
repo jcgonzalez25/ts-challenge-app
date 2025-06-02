@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { Student } from '../types/student.types';
+import { Student } from '../../types/student.types';
 
 export const useStudentFilters = (students: Student[]) => {
   const [searchTerm, setSearchTerm] = useState('');

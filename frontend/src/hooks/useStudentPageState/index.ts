@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { useStudents } from './useStudents';
-import { useStudentEditor } from './useStudentEditor';
-import { useConfirmation } from './useConfirmation';
-import { useViewToggle } from './useViewToggle';
+import { useStudents } from '../useStudents';
+import { useStudentEditor } from '../useStudentEditor';
+import { useConfirmation } from '../useConfirmation';
+import { useViewToggle } from '../useViewToggle';
 
 export const useStudentPageState = () => {
   // Modal state
