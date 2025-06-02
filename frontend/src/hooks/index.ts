@@ -18,7 +18,14 @@ export type {
   StudentsApiOperations,
 } from './useStudents';
 
+// Student workflow hooks
+export { useStudentEditor } from './useStudentEditor';
+export { useStudentFilters } from './useStudentFilters';
+
 // Generic utility hooks
+export { useEditingState } from './useEditingState';
+export { useConfirmation } from './useConfirmation';
+
 export { useAsyncOperation } from './useAsyncOperation';
 export type {
   AsyncOperationConfig,
