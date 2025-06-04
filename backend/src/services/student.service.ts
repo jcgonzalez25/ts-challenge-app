@@ -1,6 +1,6 @@
 import { StudentModel } from '../models/student.model';
 import { CreateStudentDto, UpdateStudentDto, Student, StudentFilters } from '../types/student.types';
-import { validateStudent, formatPhoneNumber } from '../utils/validators';
+import { formatPhoneNumber } from '../utils/validators';
 
 export class StudentService {
   static async getAllStudents(filters?: StudentFilters): Promise<Student[]> {
@@ -16,12 +16,6 @@ export class StudentService {
   }
 
   static async createStudent(data: CreateStudentDto): Promise<Student> {
-    // Validate input
-    const errors = validateStudent(data);
-    if (errors.length > 0) {
-      throw new Error(JSON.stringify(errors));
-    }
-
     // Check if email already exists
     const existingStudent = await StudentModel.findByEmail(data.email);
     if (existingStudent) {
@@ -42,12 +36,6 @@ export class StudentService {
     const existingStudent = await StudentModel.findById(id);
     if (!existingStudent) {
       throw new Error('Student not found');
-    }
-
-    // Validate input if provided
-    const errors = validateStudent({ ...existingStudent, ...data });
-    if (errors.length > 0) {
-      throw new Error(JSON.stringify(errors));
     }
 
     // Check email uniqueness if email is being updated
