@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { FormHelpers, FieldError } from './types';
 import { useFormValidation } from './useFormValidation';
-import { FormatterService, getFormatterFromInputType, FormFormattersSchema } from '../../services/formatters';
+import { FormatterService, getFormatterFromInputType, FormFormattersSchema } from '../../utils/formatters';
 
 interface UseFormHandlersConfig<T extends Record<string, any>> {
   values: T;
