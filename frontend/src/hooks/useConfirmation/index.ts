@@ -1,22 +1,11 @@
-import { useCallback } from 'react';
+// Main useConfirmation hook export
+export { useConfirmation } from './useConfirmation';
 
-interface UseConfirmationOptions {
-  message?: string;
-  title?: string;
-}
+// Type exports
+export type {
+  UseConfirmationOptions,
+  ConfirmationOperations,
+} from './types';
 
-export const useConfirmation = () => {
-  const confirm = useCallback(async (
-    action: () => Promise<void> | void,
-    options: UseConfirmationOptions = {}
-  ) => {
-    const { message = 'Are you sure?' } = options;
-    
-    const confirmed = window.confirm(message);
-    if (confirmed) {
-      await action();
-    }
-  }, []);
-
-  return { confirm };
-}; 
+// Default export for convenience
+export { useConfirmation as default } from './useConfirmation'; 

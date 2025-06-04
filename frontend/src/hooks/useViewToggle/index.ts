@@ -1,24 +1,10 @@
-import { useState, useCallback } from 'react';
+// Main useViewToggle hook export
+export { useViewToggle } from './useViewToggle';
 
-export const useViewToggle = (initialState = false) => {
-  const [isVisible, setIsVisible] = useState(initialState);
+// Type exports
+export type {
+  ViewToggleOperations,
+} from './types';
 
-  const toggle = useCallback(() => {
-    setIsVisible(prev => !prev);
-  }, []);
-
-  const show = useCallback(() => {
-    setIsVisible(true);
-  }, []);
-
-  const hide = useCallback(() => {
-    setIsVisible(false);
-  }, []);
-
-  return {
-    isVisible,
-    toggle,
-    show,
-    hide,
-  };
-}; 
+// Default export for convenience
+export { useViewToggle as default } from './useViewToggle'; 

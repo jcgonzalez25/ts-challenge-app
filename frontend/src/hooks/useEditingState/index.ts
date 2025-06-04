@@ -1,22 +1,10 @@
-import { useState, useCallback } from 'react';
+// Main useEditingState hook export
+export { useEditingState } from './useEditingState';
 
-export const useEditingState = <T>() => {
-  const [editingItem, setEditingItem] = useState<T | null>(null);
+// Type exports
+export type {
+  EditingStateOperations,
+} from './types';
 
-  const startEditing = useCallback((item: T) => {
-    setEditingItem(item);
-  }, []);
-
-  const stopEditing = useCallback(() => {
-    setEditingItem(null);
-  }, []);
-
-  const isEditing = editingItem !== null;
-
-  return {
-    editingItem,
-    isEditing,
-    startEditing,
-    stopEditing,
-  };
-}; 
+// Default export for convenience
+export { useEditingState as default } from './useEditingState'; 
