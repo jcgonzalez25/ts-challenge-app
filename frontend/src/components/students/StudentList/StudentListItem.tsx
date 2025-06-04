@@ -1,6 +1,13 @@
 import React from 'react';
 import { Student } from '../../../types/student.types';
-import { Card, Button } from '../../common';
+import { Card } from '../../common';
+import {
+  StudentHeader,
+  StudentContactInfo,
+  StudentCoordinates,
+  StudentTimestamps,
+  StudentActions,
+} from './StudentListItemComponents';
 
 interface StudentListItemProps {
   student: Student;
@@ -9,35 +16,40 @@ interface StudentListItemProps {
 }
 
 const StudentListItem: React.FC<StudentListItemProps> = ({ student, onEdit, onDelete }) => {
+  // Safely handle GPA conversion to number
+
+  // Safely handle coordinate formatting
+
   return (
     <Card hover>
       <div className="flex justify-between items-start">
-        <div>
-          <p className="font-medium text-lg">{student.name}</p>
-          <p className="text-sm text-gray-500">
-            Created: {new Date(student.createdAt).toLocaleDateString()}
-          </p>
+        <div className="flex-1">
+          <StudentHeader name={student.name} gpa={student.gpa} />
+          
+          <StudentContactInfo
+            email={student.email}
+            phoneNumber={student.phoneNumber}
+            graduationYear={student.graduationYear}
+            city={student.city}
+            state={student.state}
+          />
+          
+          <StudentCoordinates
+            latitude={student.latitude}
+            longitude={student.longitude}
+          />
+          
+          <StudentTimestamps
+            createdAt={student.createdAt}
+            updatedAt={student.updatedAt}
+          />
         </div>
-        <div className="flex gap-2">
-          {onEdit && (
-            <Button
-              onClick={() => onEdit(student)}
-              variant="secondary"
-              size="sm"
-            >
-              Edit
-            </Button>
-          )}
-          {onDelete && (
-            <Button
-              onClick={() => onDelete(student.id)}
-              variant="danger"
-              size="sm"
-            >
-              Delete
-            </Button>
-          )}
-        </div>
+
+        <StudentActions
+          student={student}
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />
       </div>
     </Card>
   );
