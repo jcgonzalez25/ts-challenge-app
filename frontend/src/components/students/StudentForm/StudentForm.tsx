@@ -17,7 +17,7 @@ const StudentForm: React.FC<StudentFormProps> = ({ onSubmit, initialData, isLoad
       email: initialData?.email || '',
       graduationYear: initialData?.graduationYear || new Date().getFullYear() + 4,
       phoneNumber: initialData?.phoneNumber || '',
-      gpa: initialData?.gpa || 0,
+      gpa: initialData?.gpa ?? 0,
       city: initialData?.city || '',
       state: initialData?.state || '',
     },
@@ -29,6 +29,15 @@ const StudentForm: React.FC<StudentFormProps> = ({ onSubmit, initialData, isLoad
       gpa: [required(), gpa()],
       city: [], // Optional field
       state: [], // Optional field
+    },
+    formatters: {
+      name: 'text',
+      email: 'email',
+      phoneNumber: 'phone',
+      graduationYear: 'integer',
+      gpa: 'decimal',
+      city: 'text',
+      state: 'text',
     },
     validateOnBlur: true,
     validateOnSubmit: true,

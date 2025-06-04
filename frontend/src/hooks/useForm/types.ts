@@ -1,4 +1,5 @@
 import { FormValidationSchema } from '../../utils/validators';
+import { FormFormattersSchema } from '../../services/formatters';
 
 export interface FieldError {
   message: string;
@@ -49,6 +50,7 @@ export interface FormHandlers<T extends Record<string, any>> {
 export interface UseFormConfig<T extends Record<string, any>> {
   initialValues: T;
   validationSchema?: FormValidationSchema<T>;
+  formatters?: FormFormattersSchema<T>;
   validateOnChange?: boolean;
   validateOnBlur?: boolean;
   validateOnSubmit?: boolean;

@@ -1,11 +1,13 @@
 import { useCallback } from 'react';
 import { FormHelpers, FieldError } from './types';
 import { useFormValidation } from './useFormValidation';
+import { FormatterService, getFormatterFromInputType, FormFormattersSchema } from '../../services/formatters';
 
 interface UseFormHandlersConfig<T extends Record<string, any>> {
   values: T;
   errors: Partial<Record<keyof T, FieldError>>;
   touched: Partial<Record<keyof T, boolean>>;
+  formatters?: FormFormattersSchema<T>;
   setFieldValue: (field: keyof T, value: any) => void;
   setFieldTouched: (field: keyof T, touched?: boolean) => void;
   setValidationErrors: (errorsOrCallback: Partial<Record<keyof T, FieldError>> | ((prev: Partial<Record<keyof T, FieldError>>) => Partial<Record<keyof T, FieldError>>)) => void;
@@ -22,6 +24,7 @@ export function useFormHandlers<T extends Record<string, any>>(config: UseFormHa
     values,
     errors,
     touched,
+    formatters,
     setFieldValue,
     setFieldTouched,
     setValidationErrors,
@@ -37,11 +40,13 @@ export function useFormHandlers<T extends Record<string, any>>(config: UseFormHa
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
     const field = name as keyof T;
-    const fieldValue = type === 'number' ? parseFloat(value) || 0 : value;
+    
+    const formatterType = formatters?.[field] || getFormatterFromInputType(type);
+    const fieldValue = FormatterService.format(value, formatterType, values[field]);
     
     setFieldValue(field, fieldValue);
     validation.validateOnChangeIfEnabled(field, setValidationErrors);
-  }, [setFieldValue, validation, setValidationErrors]);
+  }, [values, formatters, setFieldValue, validation, setValidationErrors]);
 
   // Handle input blur
   const handleBlur = useCallback((e: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
