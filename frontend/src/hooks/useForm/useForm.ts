@@ -1,8 +1,55 @@
+/**
+ * @fileoverview Main useForm hook for form state management and validation
+ * @description Provides a comprehensive form management solution with validation, formatting, and submission handling
+ */
+
 import { UseFormConfig, UseFormReturn, FormHelpers } from './types';
 import { useFormState } from './useFormState';
 import { useFormValidation } from './useFormValidation';
 import { useFormHandlers } from './useFormHandlers';
 
+/**
+ * Custom hook for comprehensive form management
+ * @template T The type of the form data object
+ * @param config - Configuration object for form behavior
+ * @returns Form state, helpers, and handlers
+ * 
+ * @example
+ * ```typescript
+ * interface LoginForm {
+ *   email: string;
+ *   password: string;
+ * }
+ * 
+ * const form = useForm<LoginForm>({
+ *   initialValues: { email: '', password: '' },
+ *   validationSchema: {
+ *     email: [required(), email()],
+ *     password: [required(), minLength(8)]
+ *   },
+ *   formatters: {
+ *     email: 'email'
+ *   },
+ *   onSubmit: async (values) => {
+ *     await api.login(values);
+ *   }
+ * });
+ * 
+ * return (
+ *   <form onSubmit={form.handleSubmit}>
+ *     <input
+ *       name="email"
+ *       value={form.values.email}
+ *       onChange={form.handleChange}
+ *       onBlur={form.handleBlur}
+ *     />
+ *     {form.getFieldMeta('email').error && (
+ *       <span>{form.getFieldMeta('email').error}</span>
+ *     )}
+ *   </form>
+ * );
+ * ```
+ */
 export function useForm<T extends Record<string, any>>(config: UseFormConfig<T>): UseFormReturn<T> {
   const {
     initialValues,
