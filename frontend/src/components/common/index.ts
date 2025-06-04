@@ -10,3 +10,9 @@ export { default as Card } from './Card';
 export { default as ErrorMessage } from './ErrorMessage';
 export { default as LoadingSpinner } from './LoadingSpinner';
 export { default as EmptyState } from './EmptyState';
+
+// New common components for better abstraction
+export { default as InfoField } from './InfoField';
+export { default as Badge } from './Badge';
+export { default as InfoGrid } from './InfoGrid';
+export { default as TimestampPair } from './TimestampPair';
