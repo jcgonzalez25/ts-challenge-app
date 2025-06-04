@@ -1,198 +1,245 @@
-# Form Hooks Architecture
+# useForm Hook
 
-This directory contains a modular form management system broken down into focused, reusable hooks.
+A comprehensive React hook for form state management, validation, and input formatting.
 
-## Hook Structure
+## Features
 
-### 1. **form.types.ts** - Type Definitions
-Central location for all form-related TypeScript interfaces and types.
+- 🎯 **Type-safe** - Full TypeScript support with generic types
+- 🔄 **State Management** - Automatic form state handling (values, errors, touched, etc.)
+- ✅ **Validation** - Flexible validation schema with built-in validators
+- 🎨 **Formatting** - Input formatting with strategy pattern (phone, email, numbers)
+- 📝 **Submission** - Async submission handling with loading states
+- 🚀 **Performance** - Optimized with proper dependency management
 
-- `FieldError` - Error structure with message and type
-- `FormState<T>` - Form state interface
-- `FormHelpers<T>` - Helper functions interface  
-- `FormHandlers<T>` - Event handlers interface
-- `UseFormConfig<T>` - Main hook configuration
-- `UseFormReturn<T>` - Complete return type
+## Quick Start
 
-### 2. **useFormState.ts** - State Management
-Manages core form state including values, errors, touched fields, and submission state.
-
-**Responsibilities:**
-- Form values state
-- Error state management
-- Touched fields tracking
-- Submission and validation state
-- Computed state (isValid, isDirty)
-- State helper functions
-
-**Key Functions:**
-- `setFieldValue` - Update single field value
-- `setFieldError` - Set field-specific error
-- `setFieldTouched` - Mark field as touched
-- `resetForm` - Reset form to initial state
-- `markAllTouched` - Mark all fields as touched
-
-### 3. **useFormValidation.ts** - Validation Logic
-Handles all validation logic including field-level and form-level validation.
-
-**Responsibilities:**
-- Field validation
-- Form validation
-- Conditional validation based on configuration
-- Error message generation
-
-**Key Functions:**
-- `validateField` - Validate single field
-- `validateForm` - Validate entire form
-- `validateOnChangeIfEnabled` - Conditional change validation
-- `validateOnBlurIfEnabled` - Conditional blur validation
-- `validateOnSubmitIfEnabled` - Conditional submit validation
-
-### 4. **useFormHandlers.ts** - Event Handling
-Manages form event handlers, field props generation, and form submission.
-
-**Responsibilities:**
-- Input change handling
-- Input blur handling
-- Form submission handling
-- Field props generation
-- Field metadata generation
-
-**Key Functions:**
-- `handleChange` - Input change handler
-- `handleBlur` - Input blur handler
-- `handleSubmit` - Form submission handler
-- `getFieldProps` - Generate field props
-- `getFieldMeta` - Generate field metadata
-
-### 5. **useForm.ts** - Main Composition Hook
-Composes all the smaller hooks into a unified interface.
-
-**Responsibilities:**
-- Hook composition
-- Configuration distribution
-- Unified API surface
-- Type re-exports
-
-## Usage Examples
-
-### Basic Usage
 ```typescript
 import { useForm } from './hooks/useForm';
-import { required, email } from './utils/validators';
+import { required, email, minLength } from './utils/validators';
 
-const MyForm = () => {
-  const form = useForm({
-    initialValues: { name: '', email: '' },
+interface LoginForm {
+  email: string;
+  password: string;
+}
+
+const LoginComponent = () => {
+  const form = useForm<LoginForm>({
+    initialValues: {
+      email: '',
+      password: ''
+    },
     validationSchema: {
-      name: [required()],
       email: [required(), email()],
+      password: [required(), minLength(8)]
+    },
+    formatters: {
+      email: 'email' // Auto-lowercase and trim
     },
     onSubmit: async (values) => {
-      await submitData(values);
-    },
+      await api.login(values);
+    }
   });
 
   return (
     <form onSubmit={form.handleSubmit}>
-      <input {...form.getFieldProps('name')} />
-      <input {...form.getFieldProps('email')} />
-      <button type="submit">Submit</button>
+      <input
+        name="email"
+        type="email"
+        value={form.values.email}
+        onChange={form.handleChange}
+        onBlur={form.handleBlur}
+      />
+      {form.getFieldMeta('email').error && (
+        <span className="error">{form.getFieldMeta('email').error}</span>
+      )}
+      
+      <input
+        name="password"
+        type="password"
+        value={form.values.password}
+        onChange={form.handleChange}
+        onBlur={form.handleBlur}
+      />
+      {form.getFieldMeta('password').error && (
+        <span className="error">{form.getFieldMeta('password').error}</span>
+      )}
+      
+      <button type="submit" disabled={form.isSubmitting}>
+        {form.isSubmitting ? 'Logging in...' : 'Login'}
+      </button>
     </form>
   );
 };
 ```
 
-### Advanced Usage with Custom Validation
+## API Reference
+
+### Configuration Options
+
+```typescript
+interface UseFormConfig<T> {
+  initialValues: T;                                    // Initial form values
+  validationSchema?: FormValidationSchema<T>;          // Validation rules per field
+  formatters?: FormFormattersSchema<T>;                // Input formatters per field
+  validateOnChange?: boolean;                          // Validate on input change (default: false)
+  validateOnBlur?: boolean;                            // Validate on field blur (default: true)
+  validateOnSubmit?: boolean;                          // Validate on form submit (default: true)
+  onSubmit?: (values: T, helpers: FormHelpers<T>) => Promise<void> | void;
+  enableReinitialize?: boolean;                        // Reinitialize when initialValues change
+}
+```
+
+### Return Object
+
+The hook returns an object with the following properties:
+
+#### State
+- `values: T` - Current form values
+- `errors: Partial<Record<keyof T, FieldError>>` - Field errors
+- `touched: Partial<Record<keyof T, boolean>>` - Which fields have been touched
+- `isSubmitting: boolean` - Whether form is being submitted
+- `isValidating: boolean` - Whether form is being validated
+- `isValid: boolean` - Whether form is currently valid
+- `isDirty: boolean` - Whether form has been modified
+- `submitCount: number` - Number of submission attempts
+
+#### Handlers
+- `handleChange: (e: React.ChangeEvent<...>) => void` - Input change handler
+- `handleBlur: (e: React.FocusEvent<...>) => void` - Input blur handler
+- `handleSubmit: (e: React.FormEvent) => void` - Form submission handler
+
+#### Helpers
+- `setFieldValue: (field: keyof T, value: any) => void` - Set a specific field value
+- `setFieldError: (field: keyof T, error: string | null) => void` - Set field error
+- `setFieldTouched: (field: keyof T, touched?: boolean) => void` - Mark field as touched
+- `getFieldProps: (field: keyof T) => FieldProps` - Get all props for a field
+- `getFieldMeta: (field: keyof T) => FieldMeta` - Get field metadata (error, touched, invalid)
+- `resetForm: (newValues?: Partial<T>) => void` - Reset form to initial state
+- `validateField: (field: keyof T) => Promise<string | null>` - Validate single field
+- `validateForm: () => Promise<boolean>` - Validate entire form
+
+## Input Formatters
+
+The `formatters` configuration allows you to specify how input values should be formatted:
+
+```typescript
+const form = useForm<StudentForm>({
+  // ... other config
+  formatters: {
+    gpa: 'decimal',           // Round to 2 decimal places, allows clearing
+    phoneNumber: 'phone',     // Format as (123) 456-7890
+    email: 'email',           // Lowercase and trim
+    graduationYear: 'integer', // Whole numbers only
+    name: 'text'              // Plain text (default)
+  }
+});
+```
+
+### Available Formatters
+
+| Type | Description | Example Input | Example Output |
+|------|-------------|---------------|----------------|
+| `text` | Plain text, no formatting | `"Hello World"` | `"Hello World"` |
+| `number` | Numeric values, NaN for empty | `"123.45"` → `123.45`, `""` → `NaN` | Allows field clearing |
+| `decimal` | Numbers rounded to 2 decimals | `"3.14159"` | `3.14` |
+| `integer` | Whole numbers only | `"123.45"` | `123` |
+| `phone` | US phone number format | `"1234567890"` | `"(123) 456-7890"` |
+| `email` | Normalized email | `"  USER@Example.COM  "` | `"user@example.com"` |
+
+## Validation
+
+Use the validation schema to define rules for each field:
+
+```typescript
+import { required, email, minLength, maxLength, pattern } from './utils/validators';
+
+const validationSchema = {
+  email: [
+    required('Email is required'),
+    email('Please enter a valid email')
+  ],
+  password: [
+    required(),
+    minLength(8, 'Password must be at least 8 characters'),
+    pattern(/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, 'Password must contain uppercase, lowercase, and number')
+  ],
+  age: [
+    required(),
+    custom((value) => value >= 18, 'Must be 18 or older')
+  ]
+};
+```
+
+## Advanced Examples
+
+### Dynamic Field Validation
 ```typescript
 const form = useForm({
-  initialValues: { password: '', confirmPassword: '' },
+  initialValues: { confirmPassword: '', password: '' },
   validationSchema: {
-    password: [required(), minLength(8)],
     confirmPassword: [
       required(),
-      custom((value, formData) => value === formData.password, 'Passwords must match')
-    ],
-  },
-  validateOnChange: true,
-  validateOnBlur: true,
+      custom((value, formData) => {
+        return value === formData?.password;
+      }, 'Passwords must match')
+    ]
+  }
 });
 ```
 
-## Benefits of This Architecture
-
-### 1. **Separation of Concerns**
-Each hook has a single, focused responsibility making them easier to understand and maintain.
-
-### 2. **Testability**
-Smaller hooks can be tested in isolation with focused test cases.
-
-### 3. **Reusability**
-Individual hooks can be reused in different contexts or combined differently.
-
-### 4. **Type Safety**
-Comprehensive TypeScript interfaces ensure type safety across all hooks.
-
-### 5. **Performance**
-Focused hooks with targeted dependencies reduce unnecessary re-renders.
-
-### 6. **Maintainability**
-Changes to specific functionality only affect the relevant hook.
-
-## Hook Dependencies
-
-```
-useForm (main)
-├── useFormState (state management)
-├── useFormValidation (validation logic)
-└── useFormHandlers (event handling)
-    ├── Uses: useFormState results
-    ├── Uses: useFormValidation results
-    └── Receives: form configuration
-```
-
-## Extending the System
-
-### Adding New Validation Rules
-Add to `utils/validators.ts`:
+### Programmatic Field Updates
 ```typescript
-export const customRule = (message: string): ValidationRule => ({
-  validate: (value) => /* validation logic */,
-  message,
+// Set field value programmatically
+form.setFieldValue('email', 'user@example.com');
+
+// Mark field as touched
+form.setFieldTouched('email', true);
+
+// Set custom error
+form.setFieldError('email', 'Email already exists');
+
+// Reset form with new values
+form.resetForm({ email: 'new@example.com' });
+```
+
+### Custom Submission Logic
+```typescript
+const form = useForm({
+  // ... config
+  onSubmit: async (values, { setSubmitting, setFieldError, resetForm }) => {
+    try {
+      setSubmitting(true);
+      await api.createUser(values);
+      resetForm(); // Clear form on success
+    } catch (error) {
+      if (error.field) {
+        setFieldError(error.field, error.message);
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  }
 });
 ```
 
-### Adding New Hook Features
-Create focused hooks that can be composed into the main `useForm` hook:
-```typescript
-const useFormAnalytics = (formState) => {
-  // Track form interactions
-};
+## Best Practices
 
-// Integrate in useForm.ts
-const analytics = useFormAnalytics(formState);
-```
+1. **Type Safety**: Always provide TypeScript interfaces for your form data
+2. **Validation**: Use `validateOnBlur` for better UX, `validateOnSubmit` for final checks
+3. **Formatting**: Configure formatters for consistent data handling
+4. **Performance**: Use `getFieldProps()` for cleaner component code
+5. **Error Handling**: Handle both field-level and form-level errors appropriately
 
-### Custom Form Components
-Use individual hooks for specialized use cases:
-```typescript
-const MyCustomFormComponent = () => {
-  const state = useFormState(config);
-  const validation = useFormValidation(config);
-  // Custom composition
-};
-```
-
-## Migration from Previous Version
-
-The new modular structure maintains the same API surface, so existing code should work without changes:
+## Integration with FormField Component
 
 ```typescript
-// This still works exactly the same
-const form = useForm({ /* config */ });
-form.handleSubmit();
-form.getFieldProps('name');
-form.isValid;
+// Clean integration with reusable FormField component
+<FormField
+  label="Email"
+  required
+  {...form.getFieldProps('email')}
+  {...form.getFieldMeta('email')}
+/>
 ```
 
-The only difference is the internal structure is now more maintainable and extensible. 
+This provides a powerful, flexible form solution that scales from simple contact forms to complex multi-step wizards. 
