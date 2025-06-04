@@ -7,6 +7,7 @@ export function useForm<T extends Record<string, any>>(config: UseFormConfig<T>)
   const {
     initialValues,
     validationSchema,
+    formatters,
     validateOnChange = false,
     validateOnBlur = true,
     validateOnSubmit = true,
@@ -49,6 +50,7 @@ export function useForm<T extends Record<string, any>>(config: UseFormConfig<T>)
     values: formState.values,
     errors: formState.errors,
     touched: formState.touched,
+    formatters,
     setFieldValue: formState.setFieldValue,
     setFieldTouched: formState.setFieldTouched,
     setValidationErrors: formState.setValidationErrors,
